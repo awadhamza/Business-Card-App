@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scroll_view_create_screen">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/name_edit_box"
+            android:layout_width="175dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_box"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="6.5dp"
+                android:layout_marginTop="9dp"
+                android:src="@drawable/person_profile_icon"
+
+                />
+
+            <EditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/transparent"
+                android:hint="@string/name_edit_string"
+                android:inputType="text"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phone_edit_box"
+            android:layout_width="175dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_box"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_edit_box">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="6.5dp"
+                android:layout_marginTop="9dp"
+                android:paddingTop="0dp"
+                android:src="@drawable/phone_card_icon"
+
+                />
+
+            <EditText
+                android:id="@+id/phone_edit_text"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/transparent"
+                android:hint="@string/phone_edit_string"
+                android:inputType="phone"
+                android:textSize="16sp"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/email_edit_box"
+            android:layout_width="175dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_box"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phone_edit_box"
+
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="6.5dp"
+                android:layout_marginTop="9dp"
+                android:paddingTop="0dp"
+                android:src="@drawable/mail_profile_icon"
+
+                />
+
+            <EditText
+                android:id="@+id/email_edit_text"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/transparent"
+                android:hint="@string/email_edit_string"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/company_edit_box"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_box"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_edit_box"
+
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="6.5dp"
+                android:layout_marginTop="9dp"
+                android:paddingTop="0dp"
+                android:src="@drawable/building_profile_icon"
+
+                />
+
+            <EditText
+                android:id="@+id/company_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/transparent"
+                android:hint="@string/company_edit_string"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profession_edit_box"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_box"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/company_edit_box"
+
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="6.5dp"
+                android:layout_marginTop="9dp"
+                android:paddingTop="0dp"
+                android:src="@drawable/briefcase_profile_icon"
+
+                />
+
+            <EditText
+                android:id="@+id/profession_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/transparent"
+                android:hint="@string/profession_edit_string"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+
+                />
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@id/company_edit_box"
+            app:layout_constraintEnd_toStartOf="@id/name_edit_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <com.google.android.gms.maps.MapView android:id="@+id/google_maps"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+
+
+            app:layout_constraintBottom_toTopOf="@id/buttonLoadPicture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profession_edit_box"
+
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonLoadPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0"
+            android:text="Load Picture"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/submit_button"
+
+            />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="288dp"
+            android:text="@string/submit_button_string"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

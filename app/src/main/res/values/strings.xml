@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Business Card</string>
+    <string name="add_card_string">Add</string>
+    <string name="placeholder_create_string">CREATE PAGE</string>
+    <string name="name_edit_string">   First Last</string>
+    <string name="phone_edit_string">Phone #</string>
+    <string name="email_edit_string">Email</string>
+    <string name="company_edit_string">Company</string>
+    <string name="profession_edit_string">Profession</string>
+    <string name="submit_button_string">Submit</string>
+    <string name="google_maps_key">AIzaSyAVC0jwmFa2Uefe4w3EaZRIYei_qUyAFvI</string>
+</resources>
