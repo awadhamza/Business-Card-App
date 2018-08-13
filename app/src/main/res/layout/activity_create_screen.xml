@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <LinearLayout
             android:id="@+id/name_edit_box"
             android:layout_width="175dp"
@@ -211,7 +210,8 @@
 
             />
 
-        <com.google.android.gms.maps.MapView android:id="@+id/google_maps"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view"
             android:layout_width="0dp"
             android:layout_height="300dp"
 
@@ -223,7 +223,21 @@
 
             />
 
+<!--
+        <fragment android:id="@+id/google_maps"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
 
+
+            app:layout_constraintBottom_toTopOf="@id/buttonLoadPicture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profession_edit_box"
+
+            />
+
+-->
 
         <Button
             android:id="@+id/buttonLoadPicture"
