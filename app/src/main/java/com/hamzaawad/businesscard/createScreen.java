@@ -1,11 +1,19 @@
 package com.hamzaawad.businesscard;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,8 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,6 +35,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -33,11 +45,16 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PICK_IMAGE = 100;
     Uri imageURI;
 
+    double markLat;
+    double markLong;
+
     Button submitButton;
     Button pictureButton;
 
-    ImageView profilePicture;
+    LocationManager locationManager;
 
+    ImageView profilePicture;
+    FusedLocationProviderClient mFusedLocationClient;
     EditText nameEditText;
     EditText phoneEditText;
     EditText emailEditText;
@@ -108,12 +125,42 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            gmap.setMyLocationEnabled(true);
+        }
+
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//        try {
+//
+//            mFusedLocationClient.getLastLocation()
+//                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                        @Override
+//                        public void onSuccess(Location location) {
+//                            // Got last known location. In some rare situations this can be null.
+//                            if (location != null) {
+//                                // Logic to handle location object
+//                                LatLng latLng1 = new LatLng(location.getLatitude(), location.getLongitude());
+//                                MarkerOptions markerOptions1 = new MarkerOptions();
+//                                markerOptions1.position(latLng1);
+//
+//                                Log.d("map02", "found");
+//                                gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng1));
+//                                gmap.clear();
+//                                gmap.addMarker(markerOptions1);
+//
+//                            }
+//                        }
+//                    });
+//        }  catch (SecurityException e) {
+//            Toast.makeText(this, "GPS FAILURE", Toast.LENGTH_LONG).show();
+//        }
 
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setCompassEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
-
+        uiSettings.setMyLocationButtonEnabled(true);
 
         gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -125,6 +172,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
                 gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 gmap.clear();
                 gmap.addMarker(markerOptions);
+                markLat = latLng.latitude;
+                markLong = latLng.longitude;
             }
         });
 
@@ -132,9 +181,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCameraIdle() {
                 // Enable Scrolling by removing the OnTouchListner
-                scrollView = findViewById(R.id.scroll_view_create_screen);
-                scrollView.setOnTouchListener(null);
                 Log.d("map01", "idle map");
+                scrollView.requestDisallowInterceptTouchEvent(false);
             }
         });
 
@@ -143,14 +191,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             public void onCameraMove() {
                 //Turn off scrollview scrolling
                 Log.d("map01", "moving");
-                scrollView = findViewById(R.id.scroll_view_create_screen);
                 // Disable Scrolling by setting up an OnTouchListener to do nothing
-                scrollView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return true;
-                    }
-                });
+                scrollView.requestDisallowInterceptTouchEvent(true);
             }
         });
     }
@@ -165,6 +207,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         companyEditText = findViewById(R.id.company_edit_text);
         professionEditText = findViewById(R.id.profession_edit_text);
         profilePicture = findViewById(R.id.profile_picture);
+
+        scrollView = findViewById(R.id.scroll_view_create_screen);
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
 
@@ -176,7 +220,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
-
 
         pictureButton = findViewById(R.id.buttonLoadPicture);
         pictureButton.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +235,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 userObject userObj = new userObject(nameEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), companyEditText.getText().toString(),
-                        professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null);
+                        professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, new LatLng(markLat, markLong));
 
                 String temp = storage.getString("usermodel", "");
                 Log.d("salih2", temp);

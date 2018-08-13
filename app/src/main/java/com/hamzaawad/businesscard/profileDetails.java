@@ -32,7 +32,9 @@ public class profileDetails extends Activity {
     TextView emailProfile;
     TextView companyProfile;
     TextView professionProfile;
+    TextView coordinatesProfile;
 
+    String coordinates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class profileDetails extends Activity {
         professionProfile = findViewById(R.id.profession_profile_detail);
         deleteButton = findViewById(R.id.delete_button);
         profilePhoto = findViewById(R.id.chosen_picture);
+        coordinatesProfile = findViewById(R.id.coordinates_profile_detail);
 
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
 
@@ -59,6 +62,10 @@ public class profileDetails extends Activity {
 //        profilePhoto.setImageURI(obj.image);
         if (obj.image != null)
             Glide.with(this).load(obj.image).into(profilePhoto);
+        if(obj.coordinates != null)
+            coordinates = "Latitude: " + obj.coordinates.latitude + ", Longitude: " + obj.coordinates.longitude;
+        coordinatesProfile.setText(coordinates);
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

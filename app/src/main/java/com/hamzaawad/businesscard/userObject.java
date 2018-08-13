@@ -3,6 +3,8 @@ package com.hamzaawad.businesscard;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class userObject {
     String fullName;
     String phoneNumber;
@@ -10,16 +12,18 @@ public class userObject {
     String companyName;
     String profession;
     String image;
+    LatLng coordinates;
 
 
 
-    userObject(String fN, String pN, String e, String cN, String p, String i){
+    userObject(String fN, String pN, String e, String cN, String p, String i, LatLng coor){
         fullName = fN;
         phoneNumber = pN;
         email = e;
         companyName = cN;
         profession = p;
         image = i;
+        coordinates = coor;
     }
 
     @Override
