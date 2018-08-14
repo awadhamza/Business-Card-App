@@ -46,8 +46,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PICK_IMAGE = 100;
     Uri imageURI;
 
-    double markLat;
-    double markLong;
+    private double markLat;
+    private double markLong;
 
     Button submitButton;
     Button pictureButton;
@@ -174,17 +174,20 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationChanged(Location location) {
                 Log.d("dddddd", location.getLatitude() + "");
 
+                Log.d("dddddd", location.getLongitude() + "");
+
                 LatLng lng1 = new LatLng(location.getLatitude(), location.getLongitude());
 
                 MarkerOptions markerOptions1 = new MarkerOptions();
                 markerOptions1.position(lng1);
 
-                Log.d("map01", "clicked");
                 gmap.moveCamera(CameraUpdateFactory.newLatLng(lng1));
                 gmap.clear();
                 gmap.addMarker(markerOptions1);
                 markLat = location.getLatitude();
                 markLong = location.getLongitude();
+
+                Log.d("dddddd", "added marker");
 
             }
 
@@ -246,13 +249,15 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         submitButton = findViewById(R.id.submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final LatLng tempLatLng = new LatLng(markLat, markLong);
+                Log.d("retrieve", markLat + "");
+                Log.d("retrieve", markLong + "");
                 userObject userObj = new userObject(nameEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), companyEditText.getText().toString(),
-                        professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, new LatLng(markLat, markLong));
+                        professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, tempLatLng);
 
                 String temp = storage.getString("usermodel", "");
                 Log.d("salih2", temp);
