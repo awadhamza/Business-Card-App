@@ -1,10 +1,19 @@
 package com.hamzaawad.businesscard;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.drm.DrmStore;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,7 +22,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,11 +61,9 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     private double markLong;
 
     Button submitButton;
-    Button pictureButton;
 
     LocationListener locationListener;
     LocationManager locationManager;
-
     ImageView profilePicture;
     EditText nameEditText;
     EditText phoneEditText;
@@ -68,7 +77,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     private MapView mapView;
     private GoogleMap gmap;
-
 
     ScrollView scrollView;
 
@@ -237,12 +245,13 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
         }
 
+
+
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        pictureButton = findViewById(R.id.buttonLoadPicture);
-        pictureButton.setOnClickListener(new View.OnClickListener() {
+        profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openGallery();

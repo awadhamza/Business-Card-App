@@ -2,228 +2,167 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view_create_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scroll_view_create_screen">
+
+    >
+
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/name_edit_box"
-            android:layout_width="175dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_box"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="6.5dp"
-                android:layout_marginTop="9dp"
-                android:src="@drawable/person_profile_icon"
-
-                />
-
-            <EditText
-                android:id="@+id/name_edit_text"
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginStart="5dp"
-                android:background="@color/transparent"
-                android:hint="@string/name_edit_string"
-                android:inputType="text"
-                android:textSize="16sp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/phone_edit_box"
-            android:layout_width="175dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_box"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_edit_box">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="6.5dp"
-                android:layout_marginTop="9dp"
-                android:paddingTop="0dp"
-                android:src="@drawable/phone_card_icon"
-
-                />
-
-            <EditText
-                android:id="@+id/phone_edit_text"
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginStart="5dp"
-                android:background="@color/transparent"
-                android:hint="@string/phone_edit_string"
-                android:inputType="phone"
-                android:textSize="16sp"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/email_edit_box"
-            android:layout_width="175dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_box"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phone_edit_box"
-
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="6.5dp"
-                android:layout_marginTop="9dp"
-                android:paddingTop="0dp"
-                android:src="@drawable/mail_profile_icon"
-
-                />
-
-            <EditText
-                android:id="@+id/email_edit_text"
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginStart="5dp"
-                android:background="@color/transparent"
-                android:hint="@string/email_edit_string"
-                android:inputType="textEmailAddress"
-                android:textSize="16sp"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/company_edit_box"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_box"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_edit_box"
-
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="6.5dp"
-                android:layout_marginTop="9dp"
-                android:paddingTop="0dp"
-                android:src="@drawable/building_profile_icon"
-
-                />
-
-            <EditText
-                android:id="@+id/company_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginStart="5dp"
-                android:background="@color/transparent"
-                android:hint="@string/company_edit_string"
-                android:inputType="textEmailAddress"
-                android:textSize="16sp"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/profession_edit_box"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_box"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/company_edit_box"
-
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="6.5dp"
-                android:layout_marginTop="9dp"
-                android:paddingTop="0dp"
-                android:src="@drawable/briefcase_profile_icon"
-
-                />
-
-            <EditText
-                android:id="@+id/profession_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginStart="5dp"
-                android:background="@color/transparent"
-                android:hint="@string/profession_edit_string"
-                android:inputType="textEmailAddress"
-                android:textSize="16sp"
-
-                />
-
-
-        </LinearLayout>
-
 
         <ImageView
             android:id="@+id/profile_picture"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            app:layout_constraintBottom_toTopOf="@id/company_edit_box"
-            app:layout_constraintEnd_toStartOf="@id/name_edit_box"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_margin="19.65dp"
+            app:layout_constraintStart_toStartOf="@id/guide_left"
+            app:layout_constraintTop_toTopOf="@id/guide_top"
+            tools:layout_editor_absoluteX="36dp"
+            tools:layout_editor_absoluteY="46dp" />
+
+        <View
+            android:id="@+id/shadow_background"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/round_image_picker"
+            app:layout_constraintBottom_toBottomOf="@id/profile_picture"
+            app:layout_constraintEnd_toEndOf="@id/profile_picture"
+            app:layout_constraintStart_toStartOf="@id/profile_picture"
+            app:layout_constraintTop_toTopOf="@id/profile_picture"
 
             />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map_view"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
+        <ImageView
+            android:layout_width="26.4dp"
+            android:layout_height="26.4dp"
+            android:src="@drawable/image_card_icon"
+            app:layout_constraintBottom_toBottomOf="@id/shadow_background"
+            app:layout_constraintEnd_toEndOf="@id/shadow_background"
+            app:layout_constraintStart_toStartOf="@id/shadow_background"
+            app:layout_constraintTop_toTopOf="@id/shadow_background" />
 
 
-            app:layout_constraintBottom_toTopOf="@id/buttonLoadPicture"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profession_edit_box"
+        <EditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/man_user"
+            android:hint="@string/name_edit_string"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/profile_picture"
+            app:layout_constraintTop_toTopOf="@id/guide_top" />
+
+        <EditText
+            android:id="@+id/phone_edit_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/call_answer"
+            android:hint="@string/phone_edit_string"
+            android:inputType="phone"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/profile_picture"
+            app:layout_constraintTop_toBottomOf="@id/name_edit_text"
 
             />
 
-<!--
+        <EditText
+            android:id="@+id/email_edit_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/mail"
+            android:hint="@string/email_edit_string"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/profile_picture"
+            app:layout_constraintTop_toBottomOf="@id/phone_edit_text"
+
+            tools:layout_editor_absoluteX="105dp" />
+
+        <EditText
+            android:id="@+id/company_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:background="@color/transparent"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/factory"
+            android:hint="@string/company_edit_string"
+            android:inputType="text"
+            android:textColorHint="#555"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toStartOf="@id/guide_far_right"
+            app:layout_constraintStart_toStartOf="@id/guide_left"
+            app:layout_constraintTop_toBottomOf="@id/email_edit_text"
+
+            />
+
+        <View
+            android:id="@+id/profession_line_view"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="#002fff"
+
+            app:layout_constraintEnd_toStartOf="@id/guide_far_right"
+            app:layout_constraintStart_toStartOf="@id/guide_left"
+            app:layout_constraintTop_toBottomOf="@id/profession_edit_text"
+            android:layout_marginTop="5dp"
+            />
+
+        <View
+            android:id="@+id/company_line_view"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="#002fff"
+
+            app:layout_constraintEnd_toStartOf="@id/guide_far_right"
+            app:layout_constraintStart_toStartOf="@id/guide_left"
+            app:layout_constraintTop_toBottomOf="@id/company_edit_text"
+            android:layout_marginTop="5dp"
+            />
+
+        <EditText
+            android:id="@+id/profession_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="17.5dp"
+            android:background="@color/transparent"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/briefcase"
+            android:hint="@string/profession_edit_string"
+            android:inputType="text"
+            android:textColorHint="#555"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toStartOf="@id/guide_far_right"
+            app:layout_constraintStart_toStartOf="@id/guide_left"
+            app:layout_constraintTop_toBottomOf="@id/company_line_view"
+
+            />
+
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_view"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="25dp"
+                app:layout_constraintTop_toBottomOf="@id/profession_line_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+                />
+
+        <!--
         <fragment android:id="@+id/google_maps"
             android:name="com.google.android.gms.maps.MapFragment"
             android:layout_width="0dp"
@@ -240,27 +179,39 @@
 -->
 
         <Button
-            android:id="@+id/buttonLoadPicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0"
-            android:text="Load Picture"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/submit_button"
-
-            />
-
-        <Button
             android:id="@+id/submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="288dp"
             android:text="@string/submit_button_string"
+            />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="145dp" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="30dp" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="35dp" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_far_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="350dp" />
 
 
     </android.support.constraint.ConstraintLayout>

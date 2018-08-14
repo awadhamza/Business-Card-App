@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#2bff00</color>
+    <color name="colorPrimaryDark">#ff003b</color>
+    <color name="colorAccent">#0099ff</color>
     <color name="transparent">#00000000</color>
+    <color name="shadow">#65000000</color>
     <color name="year">#999999</color>
     <color name="title">#222222</color>
+    <color name="businessThemeColor">#002fff</color>
+    <color name="holo_light_primary">#e01111</color>
 </resources>
