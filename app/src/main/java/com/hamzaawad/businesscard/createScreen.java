@@ -37,6 +37,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,6 +66,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     LocationListener locationListener;
     LocationManager locationManager;
     ImageView profilePicture;
+    ImageView profileIcon;
     EditText nameEditText;
     EditText phoneEditText;
     EditText emailEditText;
@@ -235,7 +237,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         companyEditText = findViewById(R.id.company_edit_text);
         professionEditText = findViewById(R.id.profession_edit_text);
         profilePicture = findViewById(R.id.profile_picture);
-
+        profileIcon = findViewById(R.id.profile_icon);
         scrollView = findViewById(R.id.scroll_view_create_screen);
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
@@ -297,8 +299,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
             imageURI = data.getData();
             profilePicture.setImageURI(imageURI);
-            Glide.with(this).load(imageURI).into(profilePicture);
-
+            Glide.with(this).load(imageURI).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+            //profileIcon.setVisibility(View.GONE);
         }
     }
 
