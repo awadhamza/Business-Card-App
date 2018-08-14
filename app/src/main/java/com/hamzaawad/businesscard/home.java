@@ -3,22 +3,37 @@ package com.hamzaawad.businesscard;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
-public class home extends Activity {
+public class home extends Activity  {
     Button addCard;
     SharedPreferences storage;
     SharedPreferences.Editor editor;
@@ -26,18 +41,27 @@ public class home extends Activity {
     RelativeLayout rowHolder;
     MyAdapter adapter;
     RecyclerView recyclerView;
-
+    EditText searchEditText;
+    ArrayList<String> profiles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+        searchEditText = findViewById(R.id.search_edit_text);
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
         addCard = findViewById(R.id.add_card_button);
+    }
+
+    void filterH(String text) {
+
+        adapter.filter(text);
+
     }
 
     @Override
@@ -66,6 +90,7 @@ public class home extends Activity {
         Gson gson = new Gson();
         final UserObjectListModel parent = gson.fromJson(temp, UserObjectListModel.class);
 
+
         if (parent == null || parent.getUserObjectArrayList() == null) {
             Gson gson22 = new Gson();
             String json = gson22.toJson(arrayListHolder);
@@ -78,7 +103,7 @@ public class home extends Activity {
             Toast.makeText(this, "list size is : " + parent.getUserObjectArrayList().size(), Toast.LENGTH_SHORT).show();
             String current;
 
-            ArrayList<String> profiles = new ArrayList<>();
+            profiles = new ArrayList<>();
             for (int i = 0; i < parent.getUserObjectArrayList().size(); i++) {
                 current = parent.getUserObjectArrayList().get(i).fullName;
                 profiles.add(current);
@@ -86,13 +111,13 @@ public class home extends Activity {
             adapter = new MyAdapter(this, profiles);
 
             recyclerView.setAdapter(adapter);
-            Log.d("salihsize", profiles.size()+ "");
+            Log.d("salihsize", profiles.size() + "");
 
             adapter.setClickListener(new MyAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (parent.getUserObjectArrayList() != null && parent.getUserObjectArrayList().size() > 0) {    /** Check if null first **/
-                        Log.d("salihclick", position+ "");
+                        Log.d("salihclick", position + "");
 
                         Log.d("adapterListener", "position: " + position);
 
@@ -117,14 +142,29 @@ public class home extends Activity {
                     }
                 }
             });
-        }else{
+        } else {
 
             adapter = new MyAdapter(this, null);
 
             recyclerView.setAdapter(adapter);
         }
 
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterH(searchEditText.getText().toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
 
 
         addCard.setOnClickListener(new View.OnClickListener() {
@@ -138,4 +178,5 @@ public class home extends Activity {
 
 
     }
+
 }

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -51,10 +52,10 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     Button submitButton;
     Button pictureButton;
 
+    LocationListener locationListener;
     LocationManager locationManager;
 
     ImageView profilePicture;
-    FusedLocationProviderClient mFusedLocationClient;
     EditText nameEditText;
     EditText phoneEditText;
     EditText emailEditText;
@@ -70,7 +71,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
 
     ScrollView scrollView;
-    //TODO: Add google maps pin-marker selection option
 
 
     @Override
@@ -129,33 +129,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             gmap.setMyLocationEnabled(true);
         }
 
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-//
-//        try {
-//
-//            mFusedLocationClient.getLastLocation()
-//                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            // Got last known location. In some rare situations this can be null.
-//                            if (location != null) {
-//                                // Logic to handle location object
-//                                LatLng latLng1 = new LatLng(location.getLatitude(), location.getLongitude());
-//                                MarkerOptions markerOptions1 = new MarkerOptions();
-//                                markerOptions1.position(latLng1);
-//
-//                                Log.d("map02", "found");
-//                                gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng1));
-//                                gmap.clear();
-//                                gmap.addMarker(markerOptions1);
-//
-//                            }
-//                        }
-//                    });
-//        }  catch (SecurityException e) {
-//            Toast.makeText(this, "GPS FAILURE", Toast.LENGTH_LONG).show();
-//        }
-
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setCompassEnabled(true);
@@ -195,6 +168,50 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
                 scrollView.requestDisallowInterceptTouchEvent(true);
             }
         });
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.d("dddddd", location.getLatitude() + "");
+
+                LatLng lng1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+                MarkerOptions markerOptions1 = new MarkerOptions();
+                markerOptions1.position(lng1);
+
+                Log.d("map01", "clicked");
+                gmap.moveCamera(CameraUpdateFactory.newLatLng(lng1));
+                gmap.clear();
+                gmap.addMarker(markerOptions1);
+                markLat = location.getLatitude();
+                markLong = location.getLongitude();
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100,
+                    100, locationListener);
+        }
     }
 
     @Override

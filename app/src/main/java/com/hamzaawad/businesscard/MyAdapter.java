@@ -5,16 +5,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<String> mData;
+    private List<String> mTempData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
@@ -22,6 +26,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     MyAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.mTempData = new ArrayList<>();
+        mTempData.addAll(mData);
     }
 
     // inflates the row layout from xml when needed
@@ -78,5 +84,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mData.clear();
+        if (charText.length() == 0) {
+            mData.addAll(mTempData); //default list
+        } else {
+            for (String object : mTempData) {
+                if (object.toLowerCase().trim().contains(charText)) {
+                    mData.add(object);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
