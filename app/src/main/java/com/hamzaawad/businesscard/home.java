@@ -10,6 +10,7 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -33,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class home extends Activity  {
+public class home extends AppCompatActivity {
     Button addCard;
     SharedPreferences storage;
     SharedPreferences.Editor editor;

@@ -28,12 +28,16 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -61,7 +65,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     private double markLat;
     private double markLong;
 
-    Button submitButton;
+    MenuInflater menuInflater;
 
     LocationListener locationListener;
     LocationManager locationManager;
@@ -228,9 +232,47 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.save_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.opt_save) {
+            // Save Pressed
+            Log.d("actionbar", "SAVED!");
+            final LatLng tempLatLng = new LatLng(markLat, markLong);
+            Log.d("retrieve", markLat + "");
+            Log.d("retrieve", markLong + "");
+            userObject userObj = new userObject(nameEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), companyEditText.getText().toString(),
+                    professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, tempLatLng);
+
+            String temp = storage.getString("usermodel", "");
+            Log.d("salih2", temp);
+            Gson gson = new Gson();
+            UserObjectListModel obj = gson.fromJson(temp, UserObjectListModel.class);
+            List<userObject> tempObj = obj.getUserObjectArrayList();
+            tempObj.add(userObj);
+
+            Gson gson22 = new Gson();
+            String json = gson22.toJson(new UserObjectListModel(tempObj));
+            editor.putString("usermodel", json);
+            editor.commit();
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_screen);
+
+
         nameEditText = findViewById(R.id.name_edit_text);
         phoneEditText = findViewById(R.id.phone_edit_text);
         emailEditText = findViewById(R.id.email_edit_text);
@@ -248,7 +290,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
@@ -257,32 +298,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 openGallery();
-            }
-        });
-
-        submitButton = findViewById(R.id.submit_button);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final LatLng tempLatLng = new LatLng(markLat, markLong);
-                Log.d("retrieve", markLat + "");
-                Log.d("retrieve", markLong + "");
-                userObject userObj = new userObject(nameEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), companyEditText.getText().toString(),
-                        professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, tempLatLng);
-
-                String temp = storage.getString("usermodel", "");
-                Log.d("salih2", temp);
-                Gson gson = new Gson();
-                UserObjectListModel obj = gson.fromJson(temp, UserObjectListModel.class);
-                List<userObject> tempObj = obj.getUserObjectArrayList();
-                tempObj.add(userObj);
-
-                Gson gson22 = new Gson();
-                String json = gson22.toJson(new UserObjectListModel(tempObj));
-                editor.putString("usermodel", json);
-                editor.commit();
-
-                finish();
             }
         });
 
