@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -32,7 +34,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class profileDetails extends Activity implements OnMapReadyCallback {
+public class profileDetails extends AppCompatActivity implements OnMapReadyCallback {
     ImageView profilePhoto;
     SharedPreferences storage;
     SharedPreferences.Editor editor;
@@ -115,12 +117,6 @@ public class profileDetails extends Activity implements OnMapReadyCallback {
 
             gmap = googleMap;
 
-
-            Gson gson = new Gson();
-            String json = storage.getString("nameClicked", "");
-            Log.d("retrieveMap", json);
-            final userObject obj = gson.fromJson(json, userObject.class);
-
             LatLng latLng = new LatLng(markLat, markLong);
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
@@ -188,9 +184,8 @@ public class profileDetails extends Activity implements OnMapReadyCallback {
         emailProfile.setText(obj.email);
         companyProfile.setText(obj.companyName);
         professionProfile.setText(obj.profession);
-//        profilePhoto.setImageURI(obj.image);
         if (obj.image != null) {
-            Glide.with(this).load(obj.image).into(profilePhoto);
+            Glide.with(this).load(obj.image).apply(RequestOptions.circleCropTransform()).into(profilePhoto);
         }
 
 
