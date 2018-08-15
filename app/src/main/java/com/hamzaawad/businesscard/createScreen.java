@@ -235,6 +235,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onCreateOptionsMenu(Menu menu) {
         menuInflater = new MenuInflater(this);
         menuInflater.inflate(R.menu.save_menu, menu);
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 

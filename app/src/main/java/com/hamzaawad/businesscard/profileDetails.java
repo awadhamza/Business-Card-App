@@ -12,6 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,8 +44,9 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
 
     UserObjectListModel arrayListHolder;
     ArrayList<userObject> dummyMode;
-    Button deleteButton;
+    static userObject tempErase;
 
+    MenuInflater menuInflater;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -113,7 +117,7 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if(googleMap != null) {
+        if (googleMap != null) {
 
             gmap = googleMap;
 
@@ -152,6 +156,67 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.erase_menu, menu);
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.opt_erase) {
+            // Erase menu option pressed
+
+            dummyMode = new ArrayList<>();
+            String temp = storage.getString("usermodel", "");
+            Gson gson = new Gson();
+            // Get arrayListHolder from storage
+            arrayListHolder = gson.fromJson(temp, UserObjectListModel.class);
+            // Find profile to delete
+
+
+            List<userObject> tempList = arrayListHolder.getUserObjectArrayList();
+
+            for (int i = 0; i < tempList.size(); i++) {
+                if (tempList.get(i).fullName.equals(tempErase.fullName) &&
+                        tempList.get(i).phoneNumber.equals(tempErase.phoneNumber) &&
+                        tempList.get(i).email.equals(tempErase.email) &&
+                        tempList.get(i).companyName.equals(tempErase.companyName) &&
+                        tempList.get(i).profession.equals(tempErase.profession)) {
+                    Log.d("deleteProf", "objects are equal");
+                    Log.d("salihdel", i + "");
+                    tempList.remove(i);
+                    arrayListHolder.setUserObjectArrayList(tempList);
+
+                    // Put new usermodel object back into storage
+                    Gson gson2 = new Gson();
+                    String json = gson2.toJson(arrayListHolder);
+                    editor = storage.edit();
+                    editor.putString("usermodel", json);
+                    editor.commit();
+
+                    Log.d("deleteProf", "deleted, going home");
+                    // Go back home after delete
+                    finish();
+                }
+            }
+
+            // Put new usermodel object back into storage
+            Gson gson2 = new Gson();
+            String json = gson2.toJson(arrayListHolder);
+            editor = storage.edit();
+            editor.putString("usermodel", json);
+            editor.commit();
+
+            // Go back home after delete
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_details);
@@ -160,7 +225,6 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         emailProfile = findViewById(R.id.email_profile_detail);
         companyProfile = findViewById(R.id.company_profile_detail);
         professionProfile = findViewById(R.id.profession_profile_detail);
-        deleteButton = findViewById(R.id.delete_button);
         profilePhoto = findViewById(R.id.chosen_picture);
         mapView = findViewById(R.id.coordinates_profile_detail);
         scrollView = findViewById(R.id.scroll_view_profile_detail);
@@ -178,6 +242,7 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         Gson gson = new Gson();
         String json = storage.getString("nameClicked", "");
         final userObject obj = gson.fromJson(json, userObject.class);
+        tempErase = obj;
 
         nameProfile.setText(obj.fullName);
         phoneProfile.setText(obj.phoneNumber);
@@ -193,7 +258,7 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         markLong = obj.coordinates.longitude;
 
         Log.d("retrieveMap", "here1");
-        if(obj.coordinates != null && gmap != null) {
+        if (obj.coordinates != null && gmap != null) {
 //            coordinates = "Latitude: " + obj.coordinates.latitude + ", Longitude: " + obj.coordinates.longitude;
             LatLng latLng = new LatLng(obj.coordinates.latitude, obj.coordinates.longitude);
             MarkerOptions markerOptions = new MarkerOptions();
@@ -207,57 +272,6 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
             markLong = latLng.longitude;
 //            coordinatesProfile.setText(coordinates);
         }
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dummyMode = new ArrayList<>();
-                String temp = storage.getString("usermodel", "");
-                Gson gson = new Gson();
-                // Get arrayListHolder from storage
-                arrayListHolder = gson.fromJson(temp, UserObjectListModel.class);
-                // Find profile to delete
-
-
-                List<userObject> tempList = arrayListHolder.getUserObjectArrayList();
-
-                for (int i = 0; i < tempList.size(); i++) {
-                    if (tempList.get(i).fullName.equals(obj.fullName) &&
-                            tempList.get(i).phoneNumber.equals(obj.phoneNumber) &&
-                            tempList.get(i).email.equals(obj.email) &&
-                            tempList.get(i).companyName.equals(obj.companyName) &&
-                            tempList.get(i).profession.equals(obj.profession)) {
-                        Log.d("deleteProf", "objects are equal");
-                        Log.d("salihdel", i + "");
-                        tempList.remove(i);
-                        arrayListHolder.setUserObjectArrayList(tempList);
-
-                        // Put new usermodel object back into storage
-                        Gson gson2 = new Gson();
-                        String json = gson2.toJson(arrayListHolder);
-                        editor = storage.edit();
-                        editor.putString("usermodel", json);
-                        editor.commit();
-
-                        Log.d("deleteProf", "deleted, going home");
-                        // Go back home after delete
-                        finish();
-                    }
-                }
-
-                // Put new usermodel object back into storage
-                Gson gson2 = new Gson();
-                String json = gson2.toJson(arrayListHolder);
-                editor = storage.edit();
-                editor.putString("usermodel", json);
-                editor.commit();
-
-                // Go back home after delete
-                finish();
-
-            }
-        });
 
     }
 }
