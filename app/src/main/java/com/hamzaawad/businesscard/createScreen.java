@@ -17,7 +17,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,11 +34,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +50,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -59,12 +66,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class createScreen extends AppCompatActivity implements OnMapReadyCallback {
     private static final int PICK_IMAGE = 100;
     Uri imageURI;
+
+
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     private double markLat;
     private double markLong;
@@ -80,8 +92,12 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     EditText emailEditText;
     EditText companyEditText;
     EditText professionEditText;
+    EditText addressSearchEditText;
     SharedPreferences storage;
     SharedPreferences.Editor editor;
+
+
+//    PlaceAutocompleteFragment autocompleteFragment;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -90,6 +106,52 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     ScrollView scrollView;
 
+    void initAddressSearch(){
+        addressSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
+                if(actionID == EditorInfo.IME_ACTION_SEARCH
+                        || actionID == EditorInfo.IME_ACTION_DONE
+                        || actionID == KeyEvent.ACTION_DOWN
+                        || actionID == KeyEvent.KEYCODE_ENTER){
+                    //execute search
+                    geoLocate();
+                }
+
+                return false;
+            }
+        });
+    }
+
+    void geoLocate(){
+        String searchString = addressSearchEditText.getText().toString();
+        Geocoder geocoder = new Geocoder(createScreen.this);
+        List<Address> list = new ArrayList<>();
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        } catch (IOException e){
+            Log.d("sdlkfj", "lskdfj");
+        }
+
+        if(list.size() > 0){
+            Address address = list.get(0);
+            double lat = address.getLatitude();
+            double lng = address.getLongitude();
+            LatLng searchedAddress = new LatLng(lat, lng);
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(searchedAddress);
+
+            Log.d("map01", "clicked");
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedAddress, 7));
+            gmap.clear();
+            gmap.addMarker(markerOptions);
+            markLat = searchedAddress.latitude;
+            markLong = searchedAddress.longitude;
+
+            Log.d("hamzaS", "Found location: " + address.toString());
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -152,6 +214,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         uiSettings.setCompassEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setMyLocationButtonEnabled(true);
+
+        initAddressSearch();
 
         gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -295,17 +359,32 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         emailEditText = findViewById(R.id.email_edit_text);
         companyEditText = findViewById(R.id.company_edit_text);
         professionEditText = findViewById(R.id.profession_edit_text);
+        addressSearchEditText = findViewById(R.id.address_search_edit);
         profilePicture = findViewById(R.id.profile_picture);
         profileIcon = findViewById(R.id.profile_icon);
         scrollView = findViewById(R.id.scroll_view_create_screen);
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
 
+//        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//                // TODO: Get info about the selected place.
+//                Log.i("hamzaS", "Place: " + place.getName());
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                // TODO: Handle the error.
+//                Log.i("hamzaS", "An error occurred: " + status);
+//            }
+//        });
+
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
         }
-
 
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(mapViewBundle);
@@ -340,6 +419,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             Glide.with(this).load(imageURI).apply(RequestOptions.circleCropTransform()).into(profilePicture);
             //profileIcon.setVisibility(View.GONE);
         }
+
     }
 
     void resetIconColors() {
