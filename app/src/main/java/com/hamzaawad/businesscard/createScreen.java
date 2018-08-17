@@ -160,7 +160,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
                 markerOptions.position(latLng);
 
                 Log.d("map01", "clicked");
-                gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7));
                 gmap.clear();
                 gmap.addMarker(markerOptions);
                 markLat = latLng.latitude;
@@ -199,7 +199,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
                 MarkerOptions markerOptions1 = new MarkerOptions();
                 markerOptions1.position(lng1);
 
-                gmap.moveCamera(CameraUpdateFactory.newLatLng(lng1));
+                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(lng1, 16));
                 gmap.clear();
                 gmap.addMarker(markerOptions1);
                 markLat = location.getLatitude();
