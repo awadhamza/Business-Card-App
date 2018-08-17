@@ -122,7 +122,7 @@ public class home extends AppCompatActivity {
 
             recyclerView.setAdapter(adapter);
         } else if (parent.getUserObjectArrayList().size() > 0) {
-            Toast.makeText(this, "list size is : " + parent.getUserObjectArrayList().size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "list size is : " + parent.getUserObjectArrayList().size(), Toast.LENGTH_SHORT).show();
             String current;
 
             profiles = new ArrayList<>();

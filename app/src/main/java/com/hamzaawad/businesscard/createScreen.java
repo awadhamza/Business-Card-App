@@ -249,8 +249,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         Boolean passed = validateUserFields();
 
-        if (!passed){
-            Toast.makeText(this, "Fields aren't entered correctly", Toast.LENGTH_SHORT).show();
+        if (!passed) {
             return false;
         }
 
@@ -322,7 +321,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         resetIconColors();
         finish();
     }
@@ -343,7 +342,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    void resetIconColors(){
+    void resetIconColors() {
         Drawable inse = nameEditText.getCompoundDrawables()[0];
         inse.setTint(Color.GRAY);
         inse = phoneEditText.getCompoundDrawables()[0];
@@ -356,23 +355,62 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         inse.setTint(Color.GRAY);
     }
 
-    void findFailureReason(String typeFail){
-
+    void findFailureReason(String typeFail) {
+        if (typeFail.equalsIgnoreCase("name")) {
+            String name = nameEditText.getText().toString();
+            if (name.length() <= 0) {
+                Toast.makeText(this, "Name field is empty", Toast.LENGTH_LONG).show();
+            } else if (!name.contains(" ")) {
+                Toast.makeText(this, "First and Last required", Toast.LENGTH_LONG).show();
+            } else if (name.endsWith(" ")) {
+                Toast.makeText(this, "Field cannot end with space", Toast.LENGTH_LONG).show();
+            }
+        } else if (typeFail.equalsIgnoreCase("phone")) {
+            String phone = phoneEditText.getText().toString();
+            if (!phone.startsWith("+")) {
+                Toast.makeText(this, "Number must start with '+'", Toast.LENGTH_LONG).show();
+            } else if (!hasDashes(3)) {
+                Toast.makeText(this, "Number must use three dashes", Toast.LENGTH_LONG).show();
+            } else if (phone.length() != 15 && phone.length() != 16) {
+                Toast.makeText(this, "Format: +1-111-111-1111 or +90-111-111-1111", Toast.LENGTH_LONG).show();
+            }
+        } else if (typeFail.equalsIgnoreCase("email")){
+            String email = emailEditText.getText().toString();
+            if(!email.contains("@")){
+                Toast.makeText(this, "Missing '@'", Toast.LENGTH_LONG).show();
+            } else if (!email.contains(".")){
+                Toast.makeText(this, "Missing email suffix ex. '.com'", Toast.LENGTH_LONG).show();
+            } else if (email.length() < 5){
+                Toast.makeText(this, "Email length must be greater than 5 characters", Toast.LENGTH_LONG).show();
+            }
+        } else if(typeFail.equalsIgnoreCase("company")){
+            String company = companyEditText.getText().toString();
+            if(company.length() <= 0){
+                Toast.makeText(this, "Enter company name", Toast.LENGTH_LONG).show();
+            }
+        } else if(typeFail.equalsIgnoreCase("profession")){
+            String profession = professionEditText.getText().toString();
+            if(profession.length() <= 0){
+                Toast.makeText(this, "Enter profession", Toast.LENGTH_LONG).show();
+            }
+        } else if(typeFail.equalsIgnoreCase("picture")){
+            Toast.makeText(this, "Select a profile picture", Toast.LENGTH_LONG).show();
+        }
     }
 
     Boolean hasDashes(int i) {
         String phoneNumber = phoneEditText.getText().toString();
-            int foundDashes = 0;
-            for (int j = 0; j < phoneNumber.length(); j++) {
-                if(phoneNumber.charAt(j) == '-') {
-                    foundDashes++;
-                    Log.d("hamzaV", "found dash");
-                }
+        int foundDashes = 0;
+        for (int j = 0; j < phoneNumber.length(); j++) {
+            if (phoneNumber.charAt(j) == '-') {
+                foundDashes++;
+                Log.d("hamzaV", "found dash");
             }
-            if (foundDashes != i) {
-                return false;
-            }
-            return true;
+        }
+        if (foundDashes != i) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -382,13 +420,13 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         if (phoneNumber.length() != 15 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
             //If american phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
             //ex. +1-123-456-7890
-            if(phoneNumber.length() != 15){
+            if (phoneNumber.length() != 15) {
                 Log.d("hamzaV", phoneNumber.length() + " isn't 15");
             }
-            if(!hasDashes(3)){
+            if (!hasDashes(3)) {
                 Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
             }
-            if(!phoneEditText.toString().startsWith("+")){
+            if (!phoneEditText.toString().startsWith("+")) {
                 Log.d("hamzaV", phoneNumber + " doesn't start with +");
             }
             return false;
@@ -402,13 +440,13 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         if (phoneNumber.length() != 16 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
             //If turkish phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
             //ex. +90-212-555-1212
-            if(phoneNumber.length() != 16){
+            if (phoneNumber.length() != 16) {
                 Log.d("hamzaV", phoneNumber.length() + " isn't 16");
             }
-            if(!hasDashes(3)){
+            if (!hasDashes(3)) {
                 Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
             }
-            if(!phoneEditText.toString().startsWith("+")){
+            if (!phoneEditText.toString().startsWith("+")) {
                 Log.d("hamzaV", phoneNumber + " doesn't start with +");
             }
             return false;
@@ -419,8 +457,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     Boolean validateUserFields() {
         //Name check
         String name = nameEditText.getText().toString();
-        if(name.length() <= 0 || !name.contains(" ") || name.endsWith(" ")){
-//            findFailureReason("name");
+        if (name.length() <= 0 || !name.contains(" ") || name.endsWith(" ")) {
+            findFailureReason("name");
             Drawable inse = nameEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
             Log.d("hamzaV", "name failed");
@@ -435,6 +473,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         //Phone check
         if (!americanPhone() && !turkishPhone()) {
             //If neither phone number types aren't valid
+            findFailureReason("phone");
             Drawable inse = phoneEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
             Log.d("hamzaV", "phone failed");
@@ -450,6 +489,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         if (!email.contains("@") || !email.contains(".") || !(email.length() >= 5)) {
             //If email doesn't have '@' or doesn't have '.' and isn't greater than 5 chars
             //ex. h@a.c is 5 chars and could be valid
+            findFailureReason("email");
             Drawable inse = emailEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
             Log.d("hamzaV", "email failed: " + email);
@@ -462,8 +502,9 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         //Company check
         String company = companyEditText.getText().toString();
-        if(company.length() <= 0){
+        if (company.length() <= 0) {
             //If company field is empty
+            findFailureReason("company");
             Drawable inse = companyEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
             Log.d("hamzaV", "company failed");
@@ -477,8 +518,9 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         //Profession check
         String profession = professionEditText.getText().toString();
-        if(profession.length() <= 0){
+        if (profession.length() <= 0) {
             //If company field is empty
+            findFailureReason("profession");
             Drawable inse = professionEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
             Log.d("hamzaV", "profession failed");
@@ -492,7 +534,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         //Picture check
 
-        if(imageURI == null){
+        if (imageURI == null) {
+            findFailureReason("picture");
             profileIcon.setImageTintList(ColorStateList.valueOf(Color.RED));
             Log.d("hamzaV", "picture failed");
             return false;
