@@ -8,12 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.drm.DrmStore;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -26,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -242,12 +246,24 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Boolean passed = validateUserFields();
+
+        if (!passed){
+            Toast.makeText(this, "Fields aren't entered correctly", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        resetIconColors();
+
         if (item.getItemId() == R.id.opt_save) {
             // Save Pressed
             Log.d("actionbar", "SAVED!");
             final LatLng tempLatLng = new LatLng(markLat, markLong);
             Log.d("retrieve", markLat + "");
             Log.d("retrieve", markLong + "");
+
+
             userObject userObj = new userObject(nameEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), companyEditText.getText().toString(),
                     professionEditText.getText().toString(), imageURI != null ? imageURI.toString() : null, tempLatLng);
 
@@ -305,6 +321,12 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public void onBackPressed(){
+        resetIconColors();
+        finish();
+    }
+
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
@@ -319,6 +341,168 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             Glide.with(this).load(imageURI).apply(RequestOptions.circleCropTransform()).into(profilePicture);
             //profileIcon.setVisibility(View.GONE);
         }
+    }
+
+    void resetIconColors(){
+        Drawable inse = nameEditText.getCompoundDrawables()[0];
+        inse.setTint(Color.GRAY);
+        inse = phoneEditText.getCompoundDrawables()[0];
+        inse.setTint(Color.GRAY);
+        inse = emailEditText.getCompoundDrawables()[0];
+        inse.setTint(Color.GRAY);
+        inse = companyEditText.getCompoundDrawables()[0];
+        inse.setTint(Color.GRAY);
+        inse = professionEditText.getCompoundDrawables()[0];
+        inse.setTint(Color.GRAY);
+    }
+
+    void findFailureReason(String typeFail){
+
+    }
+
+    Boolean hasDashes(int i) {
+        String phoneNumber = phoneEditText.getText().toString();
+            int foundDashes = 0;
+            for (int j = 0; j < phoneNumber.length(); j++) {
+                if(phoneNumber.charAt(j) == '-') {
+                    foundDashes++;
+                    Log.d("hamzaV", "found dash");
+                }
+            }
+            if (foundDashes != i) {
+                return false;
+            }
+            return true;
+    }
+
+
+    Boolean americanPhone() {
+        String phoneNumber = phoneEditText.getText().toString();
+
+        if (phoneNumber.length() != 15 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
+            //If american phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
+            //ex. +1-123-456-7890
+            if(phoneNumber.length() != 15){
+                Log.d("hamzaV", phoneNumber.length() + " isn't 15");
+            }
+            if(!hasDashes(3)){
+                Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
+            }
+            if(!phoneEditText.toString().startsWith("+")){
+                Log.d("hamzaV", phoneNumber + " doesn't start with +");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    Boolean turkishPhone() {
+        String phoneNumber = phoneEditText.getText().toString();
+
+        if (phoneNumber.length() != 16 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
+            //If turkish phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
+            //ex. +90-212-555-1212
+            if(phoneNumber.length() != 16){
+                Log.d("hamzaV", phoneNumber.length() + " isn't 16");
+            }
+            if(!hasDashes(3)){
+                Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
+            }
+            if(!phoneEditText.toString().startsWith("+")){
+                Log.d("hamzaV", phoneNumber + " doesn't start with +");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    Boolean validateUserFields() {
+        //Name check
+        String name = nameEditText.getText().toString();
+        if(name.length() <= 0 || !name.contains(" ") || name.endsWith(" ")){
+//            findFailureReason("name");
+            Drawable inse = nameEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.RED);
+            Log.d("hamzaV", "name failed");
+            return false;
+        } else {
+            Drawable inse = nameEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.BLUE);
+            Log.d("hamzaV", "name phone");
+        }
+
+
+        //Phone check
+        if (!americanPhone() && !turkishPhone()) {
+            //If neither phone number types aren't valid
+            Drawable inse = phoneEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.RED);
+            Log.d("hamzaV", "phone failed");
+            return false;
+        } else {
+            Drawable inse = phoneEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.BLUE);
+            Log.d("hamzaV", "passed phone");
+        }
+
+        //Email check
+        String email = emailEditText.getText().toString();
+        if (!email.contains("@") || !email.contains(".") || !(email.length() >= 5)) {
+            //If email doesn't have '@' or doesn't have '.' and isn't greater than 5 chars
+            //ex. h@a.c is 5 chars and could be valid
+            Drawable inse = emailEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.RED);
+            Log.d("hamzaV", "email failed: " + email);
+            return false;
+        } else {
+            Drawable inse = emailEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.BLUE);
+            Log.d("hamzaV", "passed email");
+        }
+
+        //Company check
+        String company = companyEditText.getText().toString();
+        if(company.length() <= 0){
+            //If company field is empty
+            Drawable inse = companyEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.RED);
+            Log.d("hamzaV", "company failed");
+            return false;
+        } else {
+            //If company field is empty
+            Drawable inse = companyEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.BLUE);
+            Log.d("hamzaV", "passed company");
+        }
+
+        //Profession check
+        String profession = professionEditText.getText().toString();
+        if(profession.length() <= 0){
+            //If company field is empty
+            Drawable inse = professionEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.RED);
+            Log.d("hamzaV", "profession failed");
+            return false;
+        } else {
+            //If company field is empty
+            Drawable inse = professionEditText.getCompoundDrawables()[0];
+            inse.setTint(Color.BLUE);
+            Log.d("hamzaV", "passed profession");
+        }
+
+        //Picture check
+
+        if(imageURI == null){
+            profileIcon.setImageTintList(ColorStateList.valueOf(Color.RED));
+            Log.d("hamzaV", "picture failed");
+            return false;
+        } else {
+            profileIcon.setImageTintList(ColorStateList.valueOf(Color.BLUE));
+            Log.d("hamzaV", "passed picture");
+        }
+
+
+        return true;
     }
 
 }

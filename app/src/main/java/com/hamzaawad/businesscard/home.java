@@ -16,6 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,15 +38,34 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class home extends AppCompatActivity {
-    Button addCard;
     SharedPreferences storage;
     SharedPreferences.Editor editor;
     UserObjectListModel arrayListHolder;
-    RelativeLayout rowHolder;
+    MenuInflater menuInflater;
     MyAdapter adapter;
     RecyclerView recyclerView;
     EditText searchEditText;
     ArrayList<String> profiles;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.add_menu, menu);
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.opt_add){
+            Intent nextPage = new Intent(home.this, createScreen.class);
+            startActivity(nextPage);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +78,6 @@ public class home extends AppCompatActivity {
 
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
-        addCard = findViewById(R.id.add_card_button);
     }
 
     void filterH(String text) {
@@ -164,16 +185,6 @@ public class home extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-            }
-        });
-
-
-        addCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent nextPage = new Intent(home.this, createScreen.class);
-                startActivity(nextPage);
-
             }
         });
 
