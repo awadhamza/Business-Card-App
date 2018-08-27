@@ -1,6 +1,7 @@
 package com.hamzaawad.businesscard;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -169,26 +171,47 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         if (item.getItemId() == R.id.opt_erase) {
             // Erase menu option pressed
 
-            dummyMode = new ArrayList<>();
-            String temp = storage.getString("usermodel", "");
-            Gson gson = new Gson();
-            // Get arrayListHolder from storage
-            arrayListHolder = gson.fromJson(temp, UserObjectListModel.class);
-            // Find profile to delete
+            AlertDialog.Builder alert = new AlertDialog.Builder(profileDetails.this);
+            alert.setTitle("Delete");
+            alert.setMessage("Are you sure you want to delete?");
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    dummyMode = new ArrayList<>();
+                    String temp = storage.getString("usermodel", "");
+                    Gson gson = new Gson();
+                    // Get arrayListHolder from storage
+                    arrayListHolder = gson.fromJson(temp, UserObjectListModel.class);
+                    // Find profile to delete
 
 
-            List<userObject> tempList = arrayListHolder.getUserObjectArrayList();
+                    List<userObject> tempList = arrayListHolder.getUserObjectArrayList();
 
-            for (int i = 0; i < tempList.size(); i++) {
-                if (tempList.get(i).fullName.equals(tempErase.fullName) &&
-                        tempList.get(i).phoneNumber.equals(tempErase.phoneNumber) &&
-                        tempList.get(i).email.equals(tempErase.email) &&
-                        tempList.get(i).companyName.equals(tempErase.companyName) &&
-                        tempList.get(i).profession.equals(tempErase.profession)) {
-                    Log.d("deleteProf", "objects are equal");
-                    Log.d("salihdel", i + "");
-                    tempList.remove(i);
-                    arrayListHolder.setUserObjectArrayList(tempList);
+                    for (int i = 0; i < tempList.size(); i++) {
+                        if (tempList.get(i).fullName.equals(tempErase.fullName) &&
+                                tempList.get(i).phoneNumber.equals(tempErase.phoneNumber) &&
+                                tempList.get(i).email.equals(tempErase.email) &&
+                                tempList.get(i).companyName.equals(tempErase.companyName) &&
+                                tempList.get(i).profession.equals(tempErase.profession)) {
+                            Log.d("deleteProf", "objects are equal");
+                            Log.d("salihdel", i + "");
+                            tempList.remove(i);
+                            arrayListHolder.setUserObjectArrayList(tempList);
+
+                            // Put new usermodel object back into storage
+                            Gson gson2 = new Gson();
+                            String json = gson2.toJson(arrayListHolder);
+                            editor = storage.edit();
+                            editor.putString("usermodel", json);
+                            editor.commit();
+
+                            Log.d("deleteProf", "deleted, going home");
+                            // Go back home after delete
+                            finish();
+                        }
+                    }
 
                     // Put new usermodel object back into storage
                     Gson gson2 = new Gson();
@@ -197,21 +220,24 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
                     editor.putString("usermodel", json);
                     editor.commit();
 
-                    Log.d("deleteProf", "deleted, going home");
                     // Go back home after delete
                     finish();
+
+                    dialog.dismiss();
                 }
-            }
+            });
 
-            // Put new usermodel object back into storage
-            Gson gson2 = new Gson();
-            String json = gson2.toJson(arrayListHolder);
-            editor = storage.edit();
-            editor.putString("usermodel", json);
-            editor.commit();
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-            // Go back home after delete
-            finish();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            alert.show();
+
+
         }
         return super.onOptionsItemSelected(item);
     }
