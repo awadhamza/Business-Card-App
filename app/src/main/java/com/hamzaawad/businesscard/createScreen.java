@@ -367,7 +367,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Create Profile");  // provide compatibility to all the versions
         }
 
@@ -449,22 +449,20 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     void findFailureReason(String typeFail) {
         if (typeFail.equalsIgnoreCase("name")) {
-            String name = nameEditText.getText().toString();
+            String name = nameEditText.getText().toString().trim();
             if (name.length() <= 0) {
                 Toast.makeText(this, "Name field is empty", Toast.LENGTH_LONG).show();
             } else if (!name.contains(" ")) {
                 Toast.makeText(this, "First and Last required", Toast.LENGTH_LONG).show();
-            } else if (name.endsWith(" ")) {
-                Toast.makeText(this, "Field cannot end with space", Toast.LENGTH_LONG).show();
             }
         } else if (typeFail.equalsIgnoreCase("phone")) {
             String phone = phoneEditText.getText().toString();
             if (!phone.startsWith("+")) {
                 Toast.makeText(this, "Number must start with '+'", Toast.LENGTH_LONG).show();
-            } else if (!hasDashes(3)) {
-                Toast.makeText(this, "Number must use three dashes", Toast.LENGTH_LONG).show();
-            } else if (phone.length() != 15 && phone.length() != 16) {
+            } else if (phone.length() != 15 && phone.length() != 16 || !tenNumbers()) {
                 Toast.makeText(this, "Format: +1-111-111-1111 or +90-111-111-1111", Toast.LENGTH_LONG).show();
+            } else if (!containsProperDashes()) {
+                Toast.makeText(this, "Number must use proper dashes", Toast.LENGTH_LONG).show();
             }
         } else if (typeFail.equalsIgnoreCase("email")) {
             String email = emailEditText.getText().toString();
@@ -505,20 +503,145 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    Boolean containsNumber(String temp) {
+        if (temp.contains("1") || temp.contains("2") || temp.contains("3") || temp.contains("4") || temp.contains("5")
+                || temp.contains("6") || temp.contains("7") || temp.contains("8") || temp.contains("9") || temp.contains("0")) { //If contains any number
+            return true;
+        }
+        return false;
+    }
+
+    public static String extractNumber(final String str) {
+
+        if (str == null || str.isEmpty()) return "";
+
+        StringBuilder sb = new StringBuilder();
+        boolean found = false;
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(c);
+                found = true;
+            } else if (found) {
+                // If we already found a digit before and this char is not a digit, stop looping
+                break;
+            }
+        }
+
+        return sb.toString();
+    }
+
+    Boolean containsTwoNumbers(String temp) {
+
+        String ext = extractNumber(temp);
+        //Will return numbers for head
+
+        if (ext.length() <= 1) {
+            //Single digit
+            return false;
+        } else if (ext.length() == 2) {
+            //Double digit
+            return true;
+        } else {
+            return false;
+        }
+
+        //can't add turkish fix to check for two numbers i.e. +90-
+    }
+
+    String cutPhoneNumber(String pNumber) {
+
+        // Check head before cut
+        if (pNumber.length() == 15) {
+            String head = pNumber.substring(0, 3);
+            if (!head.contains("+") || !head.contains("-") || !containsNumber(head)) {
+                return null;
+            }
+        }
+        // Check head before cut
+        else if (pNumber.length() == 16) {
+            String head = pNumber.substring(0, 4);
+            if (!head.contains("+") || !head.contains("-") || !containsTwoNumbers(head)) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+        if (pNumber.length() == 15) {
+            return pNumber.substring(3, 15);
+        }
+        return pNumber.substring(4, 16);
+    }
+
+    Boolean containsProperDashes() {
+
+
+        String phoneNumber = phoneEditText.getText().toString().trim();
+
+        if (phoneNumber.length() != 16 && phoneNumber.length() != 15) {
+            return false;
+        }
+
+        String shortenedNumber = cutPhoneNumber(phoneNumber);
+
+
+        if (shortenedNumber == null) {
+            return false;
+        }
+
+        int correctDashes = 0;
+        int index = 0;
+        int counter = 0;
+
+
+        while (index < shortenedNumber.length()) {
+
+            if (shortenedNumber.charAt(index) != '-' && counter % 3 == 0 && counter != 0) {
+                return false;
+            } else if (correctDashes == 2) {
+                return true;
+            } else if (shortenedNumber.charAt(index) == '-' && counter % 3 == 0 && counter != 0) {
+                correctDashes++;
+                counter = 0;
+            } else {
+                counter++;
+            }
+            index++;
+        }
+
+        return false;
+    }
+
+    Boolean tenNumbers() {
+        String phoneNumber = cutPhoneNumber(phoneEditText.getText().toString().trim());
+        if(phoneNumber == null){
+            return false;
+        }
+        char piece;
+        for (int i = 0; i < phoneNumber.length(); i++) {
+            if (i != 3 && i != 7) {
+                piece = phoneNumber.charAt(i);
+                if (!containsNumber(Character.toString(piece))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     Boolean americanPhone() {
-        String phoneNumber = phoneEditText.getText().toString();
+        String phoneNumber = phoneEditText.getText().toString().trim();
 
-        if (phoneNumber.length() != 15 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
+        if (phoneNumber.trim().length() != 15 || !containsProperDashes() || !phoneNumber.startsWith("+")) {
             //If american phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
             //ex. +1-123-456-7890
             if (phoneNumber.length() != 15) {
                 Log.d("hamzaV", phoneNumber.length() + " isn't 15");
             }
-            if (!hasDashes(3)) {
-                Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
+            if (!containsProperDashes()) {
+                Log.d("hamzaV", phoneNumber + " doesn't contain proper dashes");
             }
-            if (!phoneEditText.toString().startsWith("+")) {
+            if (!phoneNumber.startsWith("+")) {
                 Log.d("hamzaV", phoneNumber + " doesn't start with +");
             }
             return false;
@@ -527,18 +650,18 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     Boolean turkishPhone() {
-        String phoneNumber = phoneEditText.getText().toString();
+        String phoneNumber = phoneEditText.getText().toString().trim();
 
-        if (phoneNumber.length() != 16 || !hasDashes(3) || !phoneNumber.startsWith("+")) {
+        if (phoneNumber.trim().length() != 16 || !containsProperDashes() || !phoneNumber.startsWith("+")) {
             //If turkish phone doesn't have 15 digits nor has three dashes nor has a plus in the beginning
             //ex. +90-212-555-1212
             if (phoneNumber.length() != 16) {
                 Log.d("hamzaV", phoneNumber.length() + " isn't 16");
             }
-            if (!hasDashes(3)) {
-                Log.d("hamzaV", phoneNumber + " doesn't have 3 dashes");
+            if (!containsProperDashes()) {
+                Log.d("hamzaV", phoneNumber + " doesn't contain proper dashes");
             }
-            if (!phoneEditText.toString().startsWith("+")) {
+            if (!phoneNumber.startsWith("+")) {
                 Log.d("hamzaV", phoneNumber + " doesn't start with +");
             }
             return false;
@@ -548,8 +671,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     Boolean validateUserFields() {
         //Name check
-        String name = nameEditText.getText().toString();
-        if (name.length() <= 0 || !name.contains(" ") || name.endsWith(" ")) {
+        String name = nameEditText.getText().toString().trim();
+        if (name.length() <= 0 || !name.contains(" ")) {                //If name is empty or doesn't have a space between characters, fails
             findFailureReason("name");
             Drawable inse = nameEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
@@ -558,13 +681,12 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             Drawable inse = nameEditText.getCompoundDrawables()[0];
             inse.setTint(Color.BLUE);
-            Log.d("hamzaV", "name phone");
+            Log.d("hamzaV", "name passed");
         }
 
 
         //Phone check
-        if (!americanPhone() && !turkishPhone()) {
-            //If neither phone number types aren't valid
+        if (!americanPhone() && !turkishPhone() || !tenNumbers()) {                      //If phone number is neither American nor Turkish, fail
             findFailureReason("phone");
             Drawable inse = phoneEditText.getCompoundDrawables()[0];
             inse.setTint(Color.RED);
