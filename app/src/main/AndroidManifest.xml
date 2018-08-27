@@ -38,6 +38,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".home"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
@@ -47,6 +48,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".createScreen"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".profileDetails" />

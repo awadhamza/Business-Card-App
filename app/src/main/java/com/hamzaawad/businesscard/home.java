@@ -58,7 +58,7 @@ public class home extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.opt_add){
+        if (item.getItemId() == R.id.opt_add) {
             Intent nextPage = new Intent(home.this, createScreen.class);
             startActivity(nextPage);
         }
@@ -91,22 +91,6 @@ public class home extends AppCompatActivity {
         super.onResume();
         ArrayList<userObject> dummyMode = new ArrayList<>();
         arrayListHolder = new UserObjectListModel(dummyMode);
-//        /** Set Up Array List of Existing Keys **/
-//        String key = "a";
-//        while(storage.contains(key)){
-//
-//            Gson gson = new Gson();
-//            String json = storage.getString(key, "");
-//            profile = gson.fromJson(json, userObject.class);
-//            profileArrayList.add(key);
-//            key += "a";
-//        }
-
-//        editor = storage.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(arrayListHolder);
-//        editor.putString("usermodel", json);
-//        editor.commit();
         String temp = storage.getString("usermodel", "");
 
         Gson gson = new Gson();

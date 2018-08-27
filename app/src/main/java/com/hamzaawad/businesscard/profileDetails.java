@@ -126,7 +126,7 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
             markerOptions.position(latLng);
 
             Log.d("retrieveMap", "here");
-            gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
             gmap.clear();
             gmap.addMarker(markerOptions);
 
@@ -265,7 +265,7 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
             markerOptions.position(latLng);
 
             Log.d("retrieveMap", "here");
-            gmap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
             gmap.clear();
             gmap.addMarker(markerOptions);
             markLat = latLng.latitude;

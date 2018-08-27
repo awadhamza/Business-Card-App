@@ -106,14 +106,14 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
     ScrollView scrollView;
 
-    void initAddressSearch(){
+    void initAddressSearch() {
         addressSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
-                if(actionID == EditorInfo.IME_ACTION_SEARCH
+                if (actionID == EditorInfo.IME_ACTION_SEARCH
                         || actionID == EditorInfo.IME_ACTION_DONE
                         || actionID == KeyEvent.ACTION_DOWN
-                        || actionID == KeyEvent.KEYCODE_ENTER){
+                        || actionID == KeyEvent.KEYCODE_ENTER) {
                     //execute search
                     geoLocate();
                 }
@@ -123,17 +123,17 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    void geoLocate(){
+    void geoLocate() {
         String searchString = addressSearchEditText.getText().toString();
         Geocoder geocoder = new Geocoder(createScreen.this);
         List<Address> list = new ArrayList<>();
-        try{
+        try {
             list = geocoder.getFromLocationName(searchString, 1);
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.d("sdlkfj", "lskdfj");
         }
 
-        if(list.size() > 0){
+        if (list.size() > 0) {
             Address address = list.get(0);
             double lat = address.getLatitude();
             double lng = address.getLongitude();
@@ -454,26 +454,26 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             } else if (phone.length() != 15 && phone.length() != 16) {
                 Toast.makeText(this, "Format: +1-111-111-1111 or +90-111-111-1111", Toast.LENGTH_LONG).show();
             }
-        } else if (typeFail.equalsIgnoreCase("email")){
+        } else if (typeFail.equalsIgnoreCase("email")) {
             String email = emailEditText.getText().toString();
-            if(!email.contains("@")){
+            if (!email.contains("@")) {
                 Toast.makeText(this, "Missing '@'", Toast.LENGTH_LONG).show();
-            } else if (!email.contains(".")){
+            } else if (!email.contains(".")) {
                 Toast.makeText(this, "Missing email suffix ex. '.com'", Toast.LENGTH_LONG).show();
-            } else if (email.length() < 5){
+            } else if (email.length() < 5) {
                 Toast.makeText(this, "Email length must be greater than 5 characters", Toast.LENGTH_LONG).show();
             }
-        } else if(typeFail.equalsIgnoreCase("company")){
+        } else if (typeFail.equalsIgnoreCase("company")) {
             String company = companyEditText.getText().toString();
-            if(company.length() <= 0){
+            if (company.length() <= 0) {
                 Toast.makeText(this, "Enter company name", Toast.LENGTH_LONG).show();
             }
-        } else if(typeFail.equalsIgnoreCase("profession")){
+        } else if (typeFail.equalsIgnoreCase("profession")) {
             String profession = professionEditText.getText().toString();
-            if(profession.length() <= 0){
+            if (profession.length() <= 0) {
                 Toast.makeText(this, "Enter profession", Toast.LENGTH_LONG).show();
             }
-        } else if(typeFail.equalsIgnoreCase("picture")){
+        } else if (typeFail.equalsIgnoreCase("picture")) {
             Toast.makeText(this, "Select a profile picture", Toast.LENGTH_LONG).show();
         }
     }
