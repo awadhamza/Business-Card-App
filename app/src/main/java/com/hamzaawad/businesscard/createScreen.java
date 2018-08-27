@@ -465,13 +465,20 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this, "Number must use proper dashes", Toast.LENGTH_LONG).show();
             }
         } else if (typeFail.equalsIgnoreCase("email")) {
+            //email.endsWith(".") || email.startsWith("@") || !emailCheck()
             String email = emailEditText.getText().toString();
-            if (!email.contains("@")) {
+            if (email.endsWith(".")) {
+                Toast.makeText(this, "Email can't end with '.'", Toast.LENGTH_LONG).show();
+            } else if (email.startsWith("@")) {
+                Toast.makeText(this, "Email can't start with '@'", Toast.LENGTH_LONG).show();
+            } else if (!email.contains("@")) {
                 Toast.makeText(this, "Missing '@'", Toast.LENGTH_LONG).show();
             } else if (!email.contains(".")) {
                 Toast.makeText(this, "Missing email suffix ex. '.com'", Toast.LENGTH_LONG).show();
             } else if (email.length() < 5) {
                 Toast.makeText(this, "Email length must be greater than 5 characters", Toast.LENGTH_LONG).show();
+            } else if (!emailCheck()) {
+                Toast.makeText(this, "Email is not valid", Toast.LENGTH_LONG).show();
             }
         } else if (typeFail.equalsIgnoreCase("company")) {
             String company = companyEditText.getText().toString();
@@ -669,6 +676,18 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    Boolean emailCheck(){
+        String email = emailEditText.getText().toString().trim();
+
+        int atIndex = email.indexOf("@");
+
+        if(email.charAt(atIndex + 1) == '.'){
+            return false;
+        }
+
+        return true;
+    }
+
     Boolean validateUserFields() {
         //Name check
         String name = nameEditText.getText().toString().trim();
@@ -700,7 +719,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         //Email check
         String email = emailEditText.getText().toString();
-        if (!email.contains("@") || !email.contains(".") || !(email.length() >= 5)) {
+        if (!email.contains("@") || !email.contains(".") || !(email.length() >= 5) || email.endsWith(".") || email.startsWith("@") || !emailCheck()) {
             //If email doesn't have '@' or doesn't have '.' and isn't greater than 5 chars
             //ex. h@a.c is 5 chars and could be valid
             findFailureReason("email");

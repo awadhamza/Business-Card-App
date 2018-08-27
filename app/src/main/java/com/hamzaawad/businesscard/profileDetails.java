@@ -229,6 +229,10 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         mapView = findViewById(R.id.coordinates_profile_detail);
         scrollView = findViewById(R.id.scroll_view_profile_detail);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("View Profile");  // provide compatibility to all the versions
+        }
+
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
