@@ -20,10 +20,11 @@
 
     <TextView
         android:id="@+id/name_profile_row"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textColor="@color/title"
+        android:padding="5dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 

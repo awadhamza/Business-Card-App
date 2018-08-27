@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view_profile_detail"
     android:layout_width="match_parent"
@@ -16,10 +17,20 @@
 
         <ImageView
             android:id="@+id/chosen_picture"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="45dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.17"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guide_top_pict"
+            app:layout_constraintWidth_percent="0.4" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_top_pict"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.04"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -171,18 +182,20 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/coordinates_profile_detail"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="0dp"
 
             android:layout_marginBottom="15dp"
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_card_top"
             app:layout_constraintWidth_percent="0.9 "
 
             />
+
 
     </android.support.constraint.ConstraintLayout>
 

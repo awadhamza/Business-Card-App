@@ -7,16 +7,25 @@
     android:focusableInTouchMode="true"
     tools:context=".home">
 
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"
+        android:id="@+id/guide_top_logo"
+        />
+
     <ImageView
         android:id="@+id/business_card_image"
-        android:layout_width="250dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintHeight_percent="0.2"
         android:background="@drawable/group"
         app:layout_constraintBottom_toTopOf="@id/search_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/guide_top_logo" />
 
     <EditText
         android:id="@+id/search_edit_text"

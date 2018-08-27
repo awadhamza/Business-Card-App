@@ -40,6 +40,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -366,6 +367,11 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         storage = getSharedPreferences("hamza02", MODE_PRIVATE);
         editor = storage.edit();
 
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Create Profile");  // provide compatibility to all the versions
+        }
+
+
 //        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 //        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
 //            @Override
@@ -417,6 +423,12 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             imageURI = data.getData();
             profilePicture.setImageURI(imageURI);
             Glide.with(this).load(imageURI).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+
+//            AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F); // change values as you want
+//            alpha.setDuration(0); // Make animation instant
+//            alpha.setFillAfter(true); // Tell it to persist after the animation ends
+//            // And then on your imageview
+//            profilePicture.startAnimation(alpha);
             //profileIcon.setVisibility(View.GONE);
         }
 
