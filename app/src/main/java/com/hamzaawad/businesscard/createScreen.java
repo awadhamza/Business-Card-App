@@ -1,5 +1,6 @@
 package com.hamzaawad.businesscard;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -26,6 +27,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -78,6 +80,8 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
 
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int LOCATION_REQUEST= 2;
+    private static final int READ_REQUEST = 3;
 
     private double markLat;
     private double markLong;
@@ -96,9 +100,6 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
     EditText addressSearchEditText;
     SharedPreferences storage;
     SharedPreferences.Editor editor;
-
-
-//    PlaceAutocompleteFragment autocompleteFragment;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -203,18 +204,27 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
+    private static final String[] LOCATION_PERMS={
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
+    private static final String[] GALLERY_PERMS={
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            gmap.setMyLocationEnabled(true);
-        }
-
         UiSettings uiSettings = googleMap.getUiSettings();
-        uiSettings.setMyLocationButtonEnabled(true);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
+            gmap.setMyLocationEnabled(false);
+        } else {
+            gmap.setMyLocationEnabled(true);
+
+        }
         uiSettings.setCompassEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
-        uiSettings.setMyLocationButtonEnabled(true);
 
         initAddressSearch();
 
@@ -293,9 +303,10 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
 
         if (locationManager != null) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
                 return;
             }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20,
                     100, locationListener);
         }
     }
@@ -399,10 +410,29 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(createScreen.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(GALLERY_PERMS, READ_REQUEST);
+                    return;
+                }
                 openGallery();
             }
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == READ_REQUEST) {
+            if (ContextCompat.checkSelfPermission(createScreen.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            }
+        }
+        if(requestCode == LOCATION_REQUEST){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                gmap.setMyLocationEnabled(true);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -423,13 +453,7 @@ public class createScreen extends AppCompatActivity implements OnMapReadyCallbac
             imageURI = data.getData();
             profilePicture.setImageURI(imageURI);
             Glide.with(this).load(imageURI).apply(RequestOptions.circleCropTransform()).into(profilePicture);
-
-//            AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F); // change values as you want
-//            alpha.setDuration(0); // Make animation instant
-//            alpha.setFillAfter(true); // Tell it to persist after the animation ends
-//            // And then on your imageview
-//            profilePicture.startAnimation(alpha);
-            //profileIcon.setVisibility(View.GONE);
+            Log.d("blah", data.toString());
         }
 
     }

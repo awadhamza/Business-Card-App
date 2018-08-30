@@ -1,5 +1,6 @@
 package com.hamzaawad.businesscard;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -241,6 +242,10 @@ public class profileDetails extends AppCompatActivity implements OnMapReadyCallb
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    private static final String[] CAMERA_PERM={
+//            Manifest.permission.READ_EXTERNAL_STORAGE
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
